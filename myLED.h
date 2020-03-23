@@ -1,6 +1,8 @@
 #ifndef MYLED_H
 #define MYLED_H
-	
+
+#include "stdint.h"
+
 typedef enum {
 	ON,
 	OFF
@@ -14,10 +16,18 @@ typedef enum {
 //initialize led pins
 void initLed(void);
 	
-//cycles green leds 1-by-1
+//Cycles green leds 1-by-1
 void runGreenLed(void);
 
-void flashGreenLed(state_t);
+//Flash red led
+void flashRedLed(state_t);
 
+// Lights up all the green led
+void lightGreenLed(void);
+
+// Flash 2 green led twice when bluetooth connected
+void flashGreenLedTwice(void);
+
+static void delay(volatile uint32_t nof);
 
 #endif

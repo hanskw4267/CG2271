@@ -5,23 +5,31 @@
 #include "myMOTORS.h"
 
 
-void leds()
+void leds(void *argument)
 {
-	initLed();
-	while(1)
-	{
-		runGreenLed();
-		//flashRedLed(ON);
-		osDelay(500);
-		runGreenLed();
-		//flashRedLed(OFF);
-		osDelay(500);
-	}
+	 
+	  while(1){
+			if(rx_data == 3){
+				runGreenLed();
+			  flashRedLed(ON);
+			  osDelay(500);
+			  flashRedLed(OFF);
+			  osDelay(500);
+			}
+			if (rx_data == 2){
+			  lightGreenLed();
+			  flashRedLed(ON);
+			  osDelay(250);
+			  flashRedLed(OFF);
+			  osDelay(250);
+			}
+		}
+	
 }
 
-void movement()
+void movement(void *argument)
 {
-	initUART2(BAUD_RATE);
+	
 	while(1)
 	{
 		uint8_t last_rx_data;
@@ -37,9 +45,10 @@ void movement()
 int main(void)
 {
 	SystemCoreClockUpdate();
+	initLed();
+	initUART2(BAUD_RATE);
 	
 	osKernelInitialize();
-	osThreadNew(movement, NULL, NULL);
 	osThreadNew(leds, NULL, NULL);
 	osKernelStart();
 	return 0;
