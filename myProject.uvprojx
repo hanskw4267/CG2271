@@ -422,6 +422,11 @@
               <FileType>5</FileType>
               <FilePath>.\myUART.h</FilePath>
             </File>
+            <File>
+              <FileName>pitches.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\pitches.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
