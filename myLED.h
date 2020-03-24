@@ -28,6 +28,6 @@ void lightGreenLed(void);
 // Flash 2 green led twice when bluetooth connected
 void flashGreenLedTwice(void);
 
-static void delay(volatile uint32_t nof);
+void delay(volatile uint32_t nof);
 
 #endif

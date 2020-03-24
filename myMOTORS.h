@@ -17,5 +17,5 @@ typedef enum
 
 void initMotors(void);
 
-void move(direction_t, int);
+void move(direction_t, float);
 #endif
