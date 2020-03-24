@@ -16,7 +16,7 @@ int redpins[] = {1,2};
 int counter = 0;
 
 
-static void delay(volatile uint32_t nof){
+void delay(volatile uint32_t nof){
 
 	while(nof != 0){
 		__asm("NOP");
