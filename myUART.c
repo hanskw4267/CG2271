@@ -3,16 +3,9 @@
 
 volatile uint8_t tx_data;
 volatile uint8_t rx_data;
-
 void UART2_IRQHandler()
 {
 	NVIC_ClearPendingIRQ(UART2_IRQn);
-	
-	//transmit when reg is empty
-	if (UART2->S1 & UART_S1_TDRE_MASK)
-	{
-		UART2->D = tx_data;
-	}
 	
 	//receive when reg is full
 	if (UART2->S1 & UART_S1_RDRF_MASK)
@@ -35,10 +28,6 @@ void initUART2(uint32_t baud_rate)
 	SIM->SCGC4 |= SIM_SCGC4_UART2_MASK;
 	SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
 	
-	//clear and set uart tx port as mux mode 4
-	PORTD->PCR[UART_TX] &= ~PORT_PCR_MUX_MASK;
-	PORTD->PCR[UART_TX] |= PORT_PCR_MUX(3);
-	
 	//clear and set uart rx port as mux mode 4
 	PORTD->PCR[UART_RX] &= ~PORT_PCR_MUX_MASK;
 	PORTD->PCR[UART_RX] |= PORT_PCR_MUX(3);
@@ -56,8 +45,8 @@ void initUART2(uint32_t baud_rate)
 	UART2->S2 = 0;
 	UART2->C3 = 0;
 	
-	//enable TX/RX
-	UART2->C2 |= ((UART_C2_TE_MASK) | (UART_C2_RE_MASK));
+	//enable RX
+	UART2->C2 |= ((UART_C2_RE_MASK));
 	
 	//enable interrupt
 	NVIC_SetPriority(UART2_IRQn, 1);
@@ -65,5 +54,5 @@ void initUART2(uint32_t baud_rate)
 	NVIC_EnableIRQ(UART2_IRQn);
 	
 	//enable TX/RX interrupts
-	UART2->C2 |= UART_C2_TIE_MASK | UART_C2_RIE_MASK;
+	UART2->C2 |= UART_C2_RIE_MASK;
 }
