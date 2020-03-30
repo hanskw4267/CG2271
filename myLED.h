@@ -19,15 +19,10 @@ void initLed(void);
 //Cycles green leds 1-by-1
 void runGreenLed(void);
 
-//Flash red led
-void flashRedLed(state_t);
+//sets red led
+void setRedLed(state_t);
 
-// Lights up all the green led
-void lightGreenLed(void);
-
-// Flash 2 green led twice when bluetooth connected
-void flashGreenLedTwice(void);
-
-void delay(volatile uint32_t nof);
+// sets all the green led
+void setGreenLed(state_t);
 
 #endif

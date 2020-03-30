@@ -1,9 +1,15 @@
 #ifndef MYUART_H
 #define MYUART_H
 #include "stdint.h"
+#include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 
-extern volatile uint8_t tx_data;
 extern volatile uint8_t rx_data;
+extern osEventFlagsId_t newData;
+
+struct dataPkt
+{
+	uint8_t cmd;
+};
 
 typedef enum
 {

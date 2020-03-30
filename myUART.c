@@ -1,27 +1,35 @@
 #include "MKL25Z4.h"                    // Device header
 #include "myUART.h"
+#include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 
-volatile uint8_t tx_data;
+
 volatile uint8_t rx_data;
+osEventFlagsId_t newData;
+osMessageQueueId_t cmds;
+
 void UART2_IRQHandler()
 {
 	NVIC_ClearPendingIRQ(UART2_IRQn);
+	//UART2->C2 &= ~UART_C2_RIE_MASK;
 	
 	//receive when reg is full
 	if (UART2->S1 & UART_S1_RDRF_MASK)
 	{
 		rx_data = (UART2->D);
+		osEventFlagsSet(newData, 0x1u);
 	}
 	
 	//error check and handler
 	if ((UART2->S1 & (UART_S1_OR_MASK | UART_S1_NF_MASK | UART_S1_FE_MASK | UART_S1_PF_MASK)))
 	{
 	}
+	//UART2->C2 |= UART_C2_RIE_MASK;
 }
 
 
 void initUART2(uint32_t baud_rate)
 {
+	newData = osEventFlagsNew(NULL);
 	uint32_t divisor, bus_clock;
 	
 	//enable clock on portD

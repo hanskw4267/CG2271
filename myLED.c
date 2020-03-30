@@ -3,6 +3,7 @@
 #include "MKL25Z4.h"                    // Device header
 #include <stdbool.h>
 #include "myLED.h"
+#include "cmsis_os2.h" 
 #include <time.h>
 #define MASK(x) (1 << (x))
 
@@ -15,14 +16,6 @@ int redpins[] = {1,2};
 //counter used to cycle green
 int counter = 0;
 
-
-void delay(volatile uint32_t nof){
-
-	while(nof != 0){
-		__asm("NOP");
-		nof --;
-	}
-}
 
 void initLed()
 {
@@ -47,21 +40,20 @@ void initLed()
 		  PTA->PDDR |= MASK(redpins[i]);
 		
 	}
-	
 }
 
 void runGreenLed()
 {
 	PTC->PDOR = MASK(greenpins[counter]);
 	counter++;
-	delay(0x15000);
+  osDelay(1000);
 	if (counter > 7)
 	{
 		counter = 0;
 	}
 }
 
-void flashRedLed(state_t state)
+void setRedLed(state_t state)
 {
 	for (int i = 0; i < sizeof(redpins)/sizeof(int); i++)
 	{
@@ -76,20 +68,20 @@ void flashRedLed(state_t state)
 	}
 }
 
-void lightGreenLed(){
+void setGreenLed(state_t state){
+	
+	if (state == ON)
+	{
 	  for (int i = 0; i < sizeof(greenpins)/sizeof(int); i++)
 		{
 				PTC -> PDOR |= MASK(greenpins[i]);
 		}
-}
-
-void flashGreenLedTwice(){
-	for (int i = 0; i < 2; i++){
-			PTC -> PDOR |= MASK(greenpins[0]) | MASK(greenpins[1]);
-		  delay(0x80000);
-		  PTC -> PDOR &= ~MASK(greenpins[0]);
-		  PTC -> PDOR &= ~MASK(greenpins[1]);
-		  delay(0x80000);
 	}
-
+	else
+	{
+		for (int i = 0; i < sizeof(greenpins)/sizeof(int); i++)
+		{
+				PTC -> PDOR &= ~MASK(greenpins[i]);
+		}
+	}
 }

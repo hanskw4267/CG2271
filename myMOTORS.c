@@ -2,6 +2,7 @@
 #include "myMOTORS.h"
 
 int const FREQ_REQ = 50;
+float const MODIFIER = 0.35;
 int motorpins[] = {20, 21, 22, 23};
 int MOD = 0;
 
@@ -78,20 +79,20 @@ void move(direction_t dir, float power)
 										TPM1_C0V = TPM2_C1V = setPwmVal(power);
 										break;
 		case FORWARDRIGHT :	TPM1_C1V = setPwmVal(power);
-												TPM1_C0V = setPwmVal(power)/2;
+												TPM1_C0V = setPwmVal(power * MODIFIER);
 												TPM2_C0V = TPM2_C1V = 0;
 												break;
-		case FORWARDLEFT :	TPM1_C1V = setPwmVal(power)/2;
+		case FORWARDLEFT :	TPM1_C1V = setPwmVal(power * MODIFIER);
 												TPM1_C0V = setPwmVal(power);
 												TPM2_C0V = TPM2_C1V = 0;
 												break;
 		case REVERSERIGHT : TPM1_C1V = TPM1_C0V = 0;
 												TPM2_C1V = setPwmVal(power);
-												TPM2_C0V = setPwmVal(power)/2;
+												TPM2_C0V = setPwmVal(power* MODIFIER);
 												break;
-		case REVERSELEFT :	TPM1_C1V = setPwmVal(power)/2;
-												TPM1_C0V = setPwmVal(power);
-												TPM2_C0V = TPM2_C1V = 0;
+		case REVERSELEFT :	TPM2_C1V = setPwmVal(power * MODIFIER);
+												TPM2_C0V = setPwmVal(power);
+												TPM1_C0V = TPM1_C1V = 0;
 												break;
 		case STOP : TPM1_C1V = TPM2_C0V = 0;
 								TPM1_C0V = TPM2_C1V = 0;
