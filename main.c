@@ -3,13 +3,13 @@
 #include "myLED.h"
 #include "myUART.h"
 #include "myMOTORS.h"
+#include "myBuzzer.h"
 
 osSemaphoreId_t motorSem, ledSem;
 
 void tLED(void *argument)
 {
 	  while(1){
-			osSemaphoreAcquire(ledSem, osWaitForever);
 			if (rx_data == 9)
 			{
 				setGreenLed(OFF);
@@ -37,7 +37,6 @@ void tLED(void *argument)
 			}
 			 
 		}
-	
 }
 
 void tMotorControl(void *argument)
@@ -52,6 +51,7 @@ void tMotorControl(void *argument)
 
 void tAudio(void *argument){
 	while(1){
+		playSong();
 	}
 }
 
@@ -71,13 +71,16 @@ int main(void)
 	SystemCoreClockUpdate();
 	initMotors();
 	initUART2(BAUD_RATE);
+	initBuzzer();
 	initLed();
 	
 	
 	osKernelInitialize();
-	motorSem = osSemaphoreNew(1, 0, NULL);
-	ledSem = osSemaphoreNew(1, 0, NULL);
+	//motorSem = osSemaphoreNew(1, 0, NULL);
+	//ledSem = osSemaphoreNew(1, 0, NULL);
+	
 	osThreadNew(tBrain,NULL,NULL);
+	osThreadNew(tAudio,NULL,NULL);
 	osThreadNew(tLED, NULL, NULL);
 	osThreadNew(tMotorControl,NULL,NULL);
 	osKernelStart();

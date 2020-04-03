@@ -402,6 +402,11 @@
               <FileType>1</FileType>
               <FilePath>.\myUART.c</FilePath>
             </File>
+            <File>
+              <FileName>myBuzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\myBuzzer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -426,6 +431,11 @@
               <FileName>pitches.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\pitches.h</FilePath>
+            </File>
+            <File>
+              <FileName>myBuzzer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\myBuzzer.h</FilePath>
             </File>
           </Files>
         </Group>
