@@ -4,12 +4,7 @@
 #include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 
 extern volatile uint8_t rx_data;
-extern osEventFlagsId_t newData;
-
-struct dataPkt
-{
-	uint8_t cmd;
-};
+extern osThreadId_t tid_tBrain;
 
 typedef enum
 {
