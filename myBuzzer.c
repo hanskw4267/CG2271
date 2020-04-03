@@ -94,7 +94,7 @@ void playSong(){
  for (int i = 0; i < song_length; i += 1){
 		 int duration = 1000/song_durations[i];
 		 setFreq(song_melody[i]);
-	   osDelay(duration/1.5);
+	   osDelay(duration);
 	   setFreq(0);
 		 osDelay(duration);
 	}

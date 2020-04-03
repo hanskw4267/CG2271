@@ -46,7 +46,6 @@ void runGreenLed()
 {
 	PTC->PDOR = MASK(greenpins[counter]);
 	counter++;
-  osDelay(1000);
 	if (counter > 7)
 	{
 		counter = 0;

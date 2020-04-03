@@ -14,6 +14,10 @@ typedef enum
 	STOP = 0
 }direction_t;
 
+typedef struct
+{
+	direction_t direction;
+}cmdPkt;
 
 void initMotors(void);
 
