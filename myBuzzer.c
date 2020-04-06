@@ -4,7 +4,26 @@
 #include "cmsis_os2.h"                  // ::CMSIS:RTOS2
 
 
+// Despacito tone
+int start_melody[] = {
+  NOTE_D5, NOTE_CS5, NOTE_B4, NOTE_FS4,
+  NOTE_FS4, NOTE_FS4, NOTE_FS4, NOTE_FS4, NOTE_B4, NOTE_B4, NOTE_B4, NOTE_B4, NOTE_B4, NOTE_A4, NOTE_B4, NOTE_G4,
+  NOTE_G4, NOTE_G4, NOTE_G4, NOTE_G4, NOTE_B4, NOTE_B4, NOTE_B4, NOTE_B4, NOTE_B4, NOTE_CS5, NOTE_D5, NOTE_A4,
+  NOTE_A4, NOTE_A4, NOTE_A4, NOTE_A4, NOTE_D4, NOTE_D4, NOTE_D4, NOTE_D4, NOTE_D4, NOTE_E4, NOTE_E4, NOTE_CS4,
+  0
+};
 
+
+int start_durations[] = {
+  2, 2, 4, 4,
+  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4,
+  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 4,
+  8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 4, 2,
+  8
+};
+
+
+// Take on me tone
 int end_melody[] = {
   NOTE_FS5, NOTE_FS5, NOTE_D5, NOTE_B4, NOTE_B4, NOTE_E5, 
   NOTE_E5, NOTE_E5, NOTE_GS5, NOTE_GS5, NOTE_A5, NOTE_B5, 
@@ -36,6 +55,7 @@ int song_melody[] = {
  };
 
 
+int start_length = sizeof(start_melody)/sizeof(start_melody[0]);
 int end_length = sizeof(end_melody)/sizeof(end_melody[0]);
 int song_length = sizeof(song_melody)/sizeof(song_melody[0]);
  
@@ -98,6 +118,18 @@ void playSong(){
 	   setFreq(0);
 		 osDelay(duration);
 	}
+}
+
+void playStart(){
+	
+for (int i = 0; i < start_length; i += 1){
+		 int duration = 1000/start_durations[i];
+		 setFreq(start_melody[i]);
+	   osDelay(duration);
+	   setFreq(0);
+		 osDelay(duration/1.5);
+	}
+	
 }
 
 

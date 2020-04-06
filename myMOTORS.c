@@ -2,8 +2,8 @@
 #include "myMOTORS.h"
 
 int const FREQ_REQ = 50;
-float const L_MODIFIER = 0.5;
-float const R_MODIFIER = 0.35;
+float const L_MODIFIER = 0.2;
+float const R_MODIFIER = 0.15;
 int motorpins[] = {20, 21, 22, 23};
 int MOD = 0;
 
