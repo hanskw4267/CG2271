@@ -9,4 +9,5 @@ void playEndTone(void);
 
 void playSong(void);
 
+void playStart(void);
 #endif

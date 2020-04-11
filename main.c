@@ -20,7 +20,21 @@ const osThreadAttr_t lowThread_attr =
 	.priority = osPriorityBelowNormal
 };
 
-void tStart(void *argument)
+
+
+void tMotors(void *argument)
+{
+	cmdPkt cmd;
+	while(1)
+	{
+		osMessageQueueGet(pendingCmds, &cmd, NULL, osWaitForever);
+		move(cmd.direction, 100.0);
+	}
+}
+
+
+
+void tStartLeds(void *argument)
 {
 	while(1)
 	{
@@ -35,16 +49,6 @@ void tStart(void *argument)
 	}
 }
 
-void tMotors(void *argument)
-{
-	cmdPkt cmd;
-	while(1)
-	{
-		osMessageQueueGet(pendingCmds, &cmd, NULL, osWaitForever);
-		move(cmd.direction, 100.0);
-	}
-}
-
 void tRunLed(void *argument)
 {
 	while(1)
@@ -55,6 +59,7 @@ void tRunLed(void *argument)
 		osDelay(500);
 		setRedLed(OFF);
 		osDelay(500);
+		setGreenLed(OFF);
 	}
 }
 
@@ -68,14 +73,28 @@ void tFlashLed(void *argument)
 		osDelay(250);
 		setRedLed(OFF);
 		osDelay(250);
+		setGreenLed(OFF);
 	}
 }
 
-void tEnd(void *argument)
+
+
+void tStartSong(void *argument)
 {
 	while(1)
 	{
-		osEventFlagsWait(music, 0x10 ,NULL, osWaitForever);
+		osEventFlagsWait(music, 0x100 ,NULL, osWaitForever);
+		playStart();
+		osThreadResume(tid_vader);
+		osEventFlagsSet(music, 0x001);
+	}
+}
+
+void tEndSong(void *argument)
+{
+	while(1)
+	{
+		osEventFlagsWait(music, 0x010 ,NULL, osWaitForever);
 		playEndTone();
 	}
 }
@@ -84,7 +103,7 @@ void tSong(void *argument)
 {
 	while(1)
 	{
-		osEventFlagsWait(music, 0x01,osFlagsNoClear, osWaitForever);
+		osEventFlagsWait(music, 0x001,osFlagsNoClear, osWaitForever);
 		playSong();
 	}
 }
@@ -98,19 +117,19 @@ void tBrain(void *argument){
 		osThreadFlagsWait(0x0001 , NULL, osWaitForever);
 		newCmd.direction = rx_data;
 		osMessageQueuePut(pendingCmds, &newCmd, NULL, 2000);
-		if(newCmd.direction == 9)
+		if(newCmd.direction == START)
 		{
 			osSemaphoreRelease(startSem);
-			osThreadResume(tid_vader);
-			osEventFlagsSet(music, 0x01);
+			osEventFlagsSet(music, 0x100);
 		}
-		else if (newCmd.direction == 10)
+		else if (newCmd.direction == END)
 		{
 			osThreadSuspend(tid_vader);
-			osEventFlagsClear(music,0x01);
-			osEventFlagsSet(music, 0x10);
+			osEventFlagsClear(music,0x001);
+			osEventFlagsSet(music, 0x010);
+			osEventFlagsClear(led,0x11);
 		}
-		else if (newCmd.direction == 0)
+		else if (newCmd.direction == STOP)
 		{
 			osEventFlagsClear(led,0x01);
 			osEventFlagsSet(led,0x10);
@@ -133,7 +152,6 @@ int main(void)
 	initBuzzer();
 	initLed();
 	
-	
 	osKernelInitialize();
 	
 	pendingCmds = osMessageQueueNew(1,sizeof(cmdPkt),NULL);
@@ -145,9 +163,10 @@ int main(void)
 	movingSem = osSemaphoreNew(1, 0, NULL);
 	
 	tid_tBrain = osThreadNew(tBrain,NULL,&highThread_attr);
-	osThreadNew(tStart,NULL,NULL);
+	osThreadNew(tStartLeds,NULL,NULL);
 	osThreadNew(tMotors,NULL,NULL);
-	osThreadNew(tEnd,NULL,NULL);
+	osThreadNew(tEndSong,NULL,NULL);
+	osThreadNew(tStartSong,NULL,NULL);
 	osThreadNew(tRunLed, NULL,NULL);
 	osThreadNew(tFlashLed, NULL,NULL);
 	tid_vader = osThreadNew(tSong,NULL,&lowThread_attr);

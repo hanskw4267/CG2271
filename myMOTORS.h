@@ -11,6 +11,8 @@ typedef enum
 	FORWARDLEFT = 6,
 	REVERSERIGHT = 7,
 	REVERSELEFT = 8,
+	START = 9,
+	END = 10,
 	STOP = 0
 }direction_t;
 
