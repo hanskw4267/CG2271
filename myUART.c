@@ -15,7 +15,7 @@ void UART2_IRQHandler()
 	if (UART2->S1 & UART_S1_RDRF_MASK)
 	{
 		rx_data = (UART2->D);
-		osThreadFlagsSet(tid_tBrain, 0x0001);
+		osThreadFlagsSet(tid_tBrain, 0x1);
 	}
 	
 	//error check and handler

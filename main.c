@@ -5,7 +5,7 @@
 #include "myMOTORS.h"
 #include "myBuzzer.h"
 
-osSemaphoreId_t startSem, movingSem;
+osSemaphoreId_t startSem;
 osMessageQueueId_t pendingCmds;
 osEventFlagsId_t led, music;
 osThreadId_t tid_vader;
@@ -114,7 +114,7 @@ void tBrain(void *argument){
 	cmdPkt newCmd;
 	while(1)
 	{
-		osThreadFlagsWait(0x0001 , NULL, osWaitForever);
+		osThreadFlagsWait(0x1 , NULL, osWaitForever);
 		newCmd.direction = rx_data;
 		osMessageQueuePut(pendingCmds, &newCmd, NULL, 2000);
 		if(newCmd.direction == START)
@@ -160,7 +160,6 @@ int main(void)
 	music = osEventFlagsNew(NULL);
 	
 	startSem = osSemaphoreNew(1, 0, NULL);
-	movingSem = osSemaphoreNew(1, 0, NULL);
 	
 	tid_tBrain = osThreadNew(tBrain,NULL,&highThread_attr);
 	osThreadNew(tStartLeds,NULL,NULL);
