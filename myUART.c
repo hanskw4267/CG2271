@@ -4,7 +4,6 @@
 
 
 volatile uint8_t rx_data;
-osThreadId_t tid_tBrain;
 
 void UART2_IRQHandler()
 {

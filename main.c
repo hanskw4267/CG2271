@@ -5,10 +5,9 @@
 #include "myMOTORS.h"
 #include "myBuzzer.h"
 
-osSemaphoreId_t startSem;
 osMessageQueueId_t pendingCmds;
 osEventFlagsId_t led, music;
-osThreadId_t tid_vader;
+osThreadId_t tid_vader, tid_tBrain;
 
 const osThreadAttr_t highThread_attr = 
 {
@@ -33,12 +32,17 @@ void tMotors(void *argument)
 }
 
 
-
+/**
+* LED threads to control led states
+* tStartLeds() runs once when BT connects
+* tRunLed() runs when the robot is moving
+* tFlashLed() runs when the robot is stationary
+*/
 void tStartLeds(void *argument)
 {
 	while(1)
 	{
-		osSemaphoreAcquire(startSem,osWaitForever);
+		osEventFlagsWait(led, 0x100, NULL, osWaitForever);
 		setGreenLed(ON);
 		osDelay(500);
 		setGreenLed(OFF);
@@ -77,8 +81,12 @@ void tFlashLed(void *argument)
 	}
 }
 
-
-
+/**
+* LED threads to control led states
+* tStartSong() runs once when BT connects
+* tEndSong() runs once when BT disconnects
+* tSong() runs constantly
+*/
 void tStartSong(void *argument)
 {
 	while(1)
@@ -119,7 +127,7 @@ void tBrain(void *argument){
 		osMessageQueuePut(pendingCmds, &newCmd, NULL, 2000);
 		if(newCmd.direction == START)
 		{
-			osSemaphoreRelease(startSem);
+			osEventFlagsSet(led, 0x100);
 			osEventFlagsSet(music, 0x100);
 		}
 		else if (newCmd.direction == END)
@@ -158,8 +166,6 @@ int main(void)
 	
 	led = osEventFlagsNew(NULL);
 	music = osEventFlagsNew(NULL);
-	
-	startSem = osSemaphoreNew(1, 0, NULL);
 	
 	tid_tBrain = osThreadNew(tBrain,NULL,&highThread_attr);
 	osThreadNew(tStartLeds,NULL,NULL);
