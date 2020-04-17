@@ -57,7 +57,7 @@ void tRunLed(void *argument)
 {
 	while(1)
 	{
-		osEventFlagsWait(led, 0x01,osFlagsNoClear, osWaitForever);
+		osEventFlagsWait(led, 0x001,osFlagsNoClear, osWaitForever);
 		runGreenLed();
 		setRedLed(ON);
 		osDelay(500);
@@ -71,7 +71,7 @@ void tFlashLed(void *argument)
 {
 	while(1)
 	{
-		osEventFlagsWait(led, 0x10,osFlagsNoClear, osWaitForever);
+		osEventFlagsWait(led, 0x010,osFlagsNoClear, osWaitForever);
 		setGreenLed(ON);
 		setRedLed(ON);
 		osDelay(250);
